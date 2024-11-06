@@ -1,35 +1,60 @@
-package main
+wwpackage main
 
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
+	"io"
+	"net/http"
+	"os"
+)
 
-func init() {
-	fmt.Println("Hello from init 2")
+type FactResponse struct {
+	Text string `json:"text"`
+	Type string `json:"type"`
 }
 
 func main() {
 
-	fmt.Println(true)
+	// 1. Buat Request
+	req, err := http.NewRequest("GET", "https://cat-fact.herokuapp.com/facts/random", nil)
 
-	// iteration
-	var colors = [...]string{"merah", "kuning", "hijau"}
-	fmt.Println(len(colors))
-	fmt.Println(colors)
-
-	var i = 0
-	for {
-		if i%2 != 0 {
-			i++
-			continue
-		} else if i == 10 {
-			break
-		}
-
-		fmt.Println("Nilai : ", i)
-		i++
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(0)
 	}
 
-}
+	// 2. buat client
+	client := http.Client{}
 
-func init() {
-	fmt.Println("Hello from init 1")
+	// 3. pajnggil request dengna client
+	res, err := client.Do(req)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(0)
+	}
+
+	// tutup response body
+
+	defer res.Body.Close()
+
+	// baca response body
+	resBody, err := io.ReadAll(res.Body)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(0)
+	}
+
+	fmt.Println(resBody)
+
+	// convert ke tipe data FastResponse
+	var factResponse FactResponse
+	err = json.Unmarshal(resBody, &factResponse)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(0)
+	}
+
+	fmt.Println("text", factResponse.Text)
+	fmt.Println("type", factResponse.Type)
+
 }
