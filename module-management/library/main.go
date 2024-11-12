@@ -9,5 +9,4 @@ func main() {
 	x := pointer.Of("Hello")
 
 	fmt.Println(*x)
-	fmt.Println(x)
 }
