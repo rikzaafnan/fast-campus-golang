@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 )
 
@@ -73,7 +74,10 @@ func (x XenditPayment) SendPaymentRequest(ctx context.Context) (paymentID string
 		return "", err
 	}
 
-	_ = res
+	rawResponseBody, err := io.ReadAll(res.Body)
+	stringResponseBody := string(rawResponseBody)
+
+	_ = stringResponseBody
 
 	return "", nil
 }

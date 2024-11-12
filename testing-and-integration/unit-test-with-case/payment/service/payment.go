@@ -10,12 +10,12 @@ type Payment struct {
 	xendit PaymentGatewayProvider
 }
 
-func (p *Payment) Pay() (err error) {
+func (p *Payment) Pay(ctx context.Context) (err error) {
 
 	//	create transaction ID
 	// insert into postgres
 	//	call third party API
-	_, err = p.xendit.SendPaymentRequest()
+	_, err = p.xendit.SendPaymentRequest(ctx)
 	if err != nil {
 		return err
 	}
