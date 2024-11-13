@@ -14,15 +14,14 @@ func Demo() {
 	// 	- buatkan simulasi pengiriman data lewat channel
 	// 	- tunggu sampai program selesai
 
-	messageCh := make(chan string)
+	messageCh := make(chan string, 3)
 
 	// receiver
 	go func() {
 
-		for i := 1; i <= 5; i++ {
-			fmt.Println("menerima pesan")
+		for {
 			messageData := <-messageCh
-			fmt.Printf("pesan di terimaa %s\n", messageData)
+			fmt.Printf("data di terima : %s\n", messageData)
 		}
 
 	}()
@@ -30,9 +29,10 @@ func Demo() {
 	// sender
 	go func() {
 
-		fmt.Println("mengirim pesan")
-		messageCh <- "ini ada pesan dari goroutine"
-		fmt.Println("Pesan terkirim")
+		for i := 0; i <= 12; i++ {
+			fmt.Printf("data ke %d dikirim\n", i)
+			messageCh <- fmt.Sprintf("ini ada pesan dari goroutine ke:%d", i)
+		}
 	}()
 
 	time.Sleep(3 * time.Second)
