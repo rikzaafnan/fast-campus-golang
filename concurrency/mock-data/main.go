@@ -2,9 +2,11 @@ package main
 
 import (
 	"bufio"
+	"encoding/json"
 	"errors"
 	"flag"
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"strings"
@@ -38,6 +40,14 @@ func main() {
 		fmt.Println("file output is not found")
 		os.Exit(1)
 	}
+
+	var mapping map[string]string
+	if err := readInput(inputPath, &mapping); err != nil {
+		fmt.Printf("faialed read input: %s \n", err)
+		os.Exit(1)
+	}
+
+	fmt.Println(mapping)
 
 }
 
@@ -79,5 +89,35 @@ func confirmOverwrite() {
 		fmt.Println("membatalkan process")
 		os.Exit(1)
 	}
+}
 
+func readInput(path string, mapping *map[string]string) error {
+	if path == "" {
+		return errors.New("input is empty")
+	}
+
+	if mapping == nil {
+		return errors.New("mapping not valid")
+	}
+
+	file, err := os.Open(path)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	fileByte, err := io.ReadAll(file)
+	if err != nil {
+		return err
+	}
+
+	if len(fileByte) == 0 {
+		return errors.New("input is empty")
+	}
+
+	if err := json.Unmarshal(fileByte, &mapping); err != nil {
+		return err
+	}
+
+	return nil
 }
