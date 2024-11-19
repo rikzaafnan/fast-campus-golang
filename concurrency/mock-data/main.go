@@ -52,6 +52,17 @@ func main() {
 		os.Exit(1)
 	}
 
+	result, err := generateOuput(mapping)
+	if err != nil {
+		fmt.Printf("failed read input: %s \n", err)
+		os.Exit(1)
+	}
+
+	if err := writeOutput(outputhPath, result); err != nil {
+		fmt.Printf("gagal menulis hasil: %s \n", err)
+		os.Exit(1)
+	}
+
 }
 
 func printUsage() {
@@ -139,5 +150,41 @@ func validateType(mapping map[string]string) error {
 		}
 	}
 
+	return nil
+}
+
+func generateOuput(mapping map[string]string) (map[string]any, error) {
+
+	resultt := make(map[string]any)
+
+	for key, value := range mapping {
+		resultt[key] = fmt.Sprintf("%s plasu", value)
+	}
+
+	return resultt, nil
+}
+
+func writeOutput(path string, result map[string]any) error {
+
+	if path == "" {
+		return errors.New("path is empty")
+	}
+
+	flags := os.O_RDWR | os.O_CREATE | os.O_TRUNC
+	file, err := os.OpenFile(path, flags, 0644)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	resultByte, err := json.MarshalIndent(result, "", "   ")
+	if err != nil {
+		return err
+	}
+
+	_, err = file.Write(resultByte)
+	if err != nil {
+		return err
+	}
 	return nil
 }

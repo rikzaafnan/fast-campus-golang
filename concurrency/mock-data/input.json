@@ -1,6 +1,7 @@
 {
   "name": "name",
-  "date_birth": "date",
+  "date_of_birth": "date",
   "address": "address",
-  "phone": "phone"
+  "phone": "phone",
+  "email": "name"
 }
