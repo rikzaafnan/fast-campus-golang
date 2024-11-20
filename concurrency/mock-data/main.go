@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"mock-data/data"
 	"os"
 	"strings"
 )
@@ -137,15 +138,9 @@ func readInput(path string, mapping *map[string]string) error {
 }
 
 func validateType(mapping map[string]string) error {
-	supported := map[string]bool{
-		"name":    true,
-		"address": true,
-		"date":    true,
-		"phone":   true,
-	}
 
 	for _, value := range mapping {
-		if !supported[value] {
+		if !data.Supported[value] {
 			return errors.New("data type is not supported")
 		}
 	}
@@ -158,7 +153,7 @@ func generateOuput(mapping map[string]string) (map[string]any, error) {
 	resultt := make(map[string]any)
 
 	for key, value := range mapping {
-		resultt[key] = fmt.Sprintf("%s plasu", value)
+		resultt[key] = data.Generate(value)
 	}
 
 	return resultt, nil
