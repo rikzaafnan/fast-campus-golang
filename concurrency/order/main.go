@@ -77,14 +77,14 @@ func main() {
 }
 
 func validatePaymentStatus(order *Order, wg *sync.WaitGroup, fanInCH chan<- bool) {
-	time.Sleep(300 * time.Millisecond)
+	time.Sleep(500 * time.Millisecond)
 	fmt.Println("payment status validated : passed")
 	fanInCH <- true
 	defer wg.Done()
 }
 
 func validateSellerState(order *Order, wg *sync.WaitGroup, fanInCH chan<- bool) {
-	time.Sleep(200 * time.Millisecond)
+	time.Sleep(600 * time.Millisecond)
 	fmt.Println("seller state validated : passed")
 	fanInCH <- true
 	defer wg.Done()
